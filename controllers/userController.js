@@ -43,4 +43,39 @@ const saveUser = async (req, res) => {
   }
 };
 
-module.exports = { saveUser };
+const getUser = async (req, res) => {
+  try {
+    const db = getDB();
+    const email = req.params.email;
+    const user = await db.collection("users").findOne({ email });
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Server error while fetching user" });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const db = getDB();
+    const email = req.params.email;
+    const { name, photo } = req.body;
+
+    if (!name || !email) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    await db
+      .collection("users")
+      .updateOne({ email }, { $set: { name, photo } });
+
+    res.status(200).json({ message: "Profile updated" });
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { saveUser, getUser, updateUser };

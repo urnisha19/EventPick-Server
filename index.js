@@ -1,4 +1,3 @@
-// Import required modules
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -17,6 +16,17 @@ app.use(express.json()); // Middleware to parse incoming JSON payloads
 // Import and use user-related routes
 const userRoutes = require("./routes/userRoutes");
 app.use("/api", userRoutes);
+
+// Import and use admin-related routes
+const adminRoutes = require("./routes/adminRoutes");
+app.use("/admin", adminRoutes);
+
+// Import and use event-related routes
+const eventRoutes = require("./routes/eventRoutes");
+app.use("/api", eventRoutes);
+
+// Static file serving
+app.use("/uploads", express.static("uploads")); 
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
