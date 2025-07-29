@@ -1,2 +1,8 @@
+# Ignore node modules
 /node_modules
-/env
+
+# Ignore env files
+.env
+
+# Ignore Firebase service account JSON
+firebase-service-account.json
