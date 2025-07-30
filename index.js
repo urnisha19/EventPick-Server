@@ -9,37 +9,41 @@ const port = process.env.PORT || 3000;
 // Connect to MongoDB
 connectDB();
 
-// Middlewares
+// Enable CORS for your frontend origins BEFORE all routes
 app.use(
   cors({
-    origin: ["https://event-pick.vercel.app", "http://localhost:5173"], 
+    origin: ["https://event-pick.vercel.app", "http://localhost:5173"],
     credentials: true,
   })
 );
-app.use(express.json()); // Middleware to parse incoming JSON payloads
 
-// Import and use user-related routes
+// Parse incoming JSON requests
+app.use(express.json());
+
+// Routes
 const userRoutes = require("./routes/userRoutes");
-app.use("/api", userRoutes);
-
-// Import and use admin-related routes
 const adminRoutes = require("./routes/adminRoutes");
-app.use("/admin", adminRoutes);
-
-// Import and use event-related routes
 const eventRoutes = require("./routes/eventRoutes");
-app.use("/api", eventRoutes);
+const bookingRoutes = require("./routes/bookingRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
-// Static file serving
+app.use("/api", userRoutes);
+app.use("/admin", adminRoutes);
+app.use("/api", eventRoutes);
+app.use("/api", bookingRoutes);
+app.use("/api", reviewRoutes);
+
+// Static files (uploads)
 app.use("/uploads", express.static("uploads"));
 
-// Import and booking event-related routes
-const bookingRoutes = require("./routes/bookingRoutes");
-app.use("/api", bookingRoutes);
-
-// Import and review event-related routes
-const reviewRoutes = require("./routes/reviewRoutes");
-app.use("/api", reviewRoutes);
+// Test route to verify CORS
+app.get(
+  "/test-cors",
+  cors({ origin: "https://event-pick.vercel.app" }),
+  (req, res) => {
+    res.json({ message: "CORS is configured correctly!" });
+  }
+);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
