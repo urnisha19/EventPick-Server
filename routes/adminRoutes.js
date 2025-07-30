@@ -7,16 +7,18 @@ const {
   deleteAdmin,
 } = require("../controllers/adminController");
 
+const verifyToken = require("../middlewares/verifyToken");
+
 // Add Admin
-router.post("/addAdmin", addAdmin);
+router.post("/addAdmin",verifyToken, addAdmin);
 
 // Get All Admins
-router.get("/allAdmin", getAllAdmin);
+router.get("/allAdmin", verifyToken, getAllAdmin);
 
 // Check if a user is admin
-router.get("/isAdmin", isAdmin);
+router.get("/isAdmin",verifyToken, isAdmin);
 
 // Delete an Admin
-router.delete("/deleteAdmin/:email", deleteAdmin);
+router.delete("/deleteAdmin/:email",verifyToken, deleteAdmin);
 
 module.exports = router;
