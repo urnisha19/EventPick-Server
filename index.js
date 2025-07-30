@@ -26,7 +26,15 @@ const eventRoutes = require("./routes/eventRoutes");
 app.use("/api", eventRoutes);
 
 // Static file serving
-app.use("/uploads", express.static("uploads")); 
+app.use("/uploads", express.static("uploads"));
+
+// Import and booking event-related routes
+const bookingRoutes = require("./routes/bookingRoutes");
+app.use("/api", bookingRoutes);
+
+// Import and review event-related routes
+const reviewRoutes = require("./routes/reviewRoutes");
+app.use("/api", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
