@@ -10,7 +10,9 @@ const port = process.env.PORT || 3000;
 connectDB();
 
 // Middlewares
-app.use(cors({ origin: ["http://localhost:5173", "https://eventpick-server.onrender.com"], credentials: true })); //Allow requests from frontend running on localhost:5173 with credentials
+app.use(
+  cors({ origin: "https://eventpick-server.onrender.com", credentials: true })
+); //Allow requests from frontend running on localhost:5173 with credentials
 app.use(express.json()); // Middleware to parse incoming JSON payloads
 
 // Import and use user-related routes
