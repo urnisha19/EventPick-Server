@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 
 // Import the Firebase service account credentials
-const serviceAccount = require("../firebase-service-account.json");
+const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
 
 // Initialize the Firebase Admin app if it hasn't been initialized already
 if (!admin.apps.length) {

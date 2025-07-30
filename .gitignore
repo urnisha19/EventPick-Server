@@ -5,4 +5,4 @@
 .env
 
 # Ignore Firebase service account JSON
-# firebase-service-account.json
+firebase-service-account.json
