@@ -39,4 +39,23 @@ const addReview = async (req, res) => {
   }
 };
 
-module.exports = { addReview };
+const getRecentReviews = async (req, res) => {
+  const db = getDB();
+  try {
+    const reviews = await db
+      .collection("reviews")
+      .find({})
+      .sort({ createdAt: -1 }) // newest first
+      .limit(5) // limit to 5 reviews
+      .toArray();
+
+    res.status(200).json(reviews);
+  } catch (err) {
+    console.error("Failed to fetch reviews:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { addReview, getRecentReviews };
+
+

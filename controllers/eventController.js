@@ -1,13 +1,13 @@
 const { ObjectId } = require("mongodb");
 const { getDB } = require("../utils/connectDB");
 
-// Controller to add a new event
+// Controller to add a new event to the database
 const addEvent = async (req, res) => {
   try {
-    const db = getDB(); // Get the database connection
-    const eventsCollection = db.collection("events"); // Reference to the 'events' collection
+    const db = getDB(); // Get database instance
+    const eventsCollection = db.collection("events"); // Reference the 'events' collection
 
-    // Destructure data from the request body
+    // Extract event details from request body
     const {
       eventName,
       date,
@@ -20,26 +20,26 @@ const addEvent = async (req, res) => {
       organizer,
     } = req.body;
 
-    const image = req.file?.filename; // Get uploaded image filename, if available
+    const image = req.file?.filename; // If an image file is uploaded, get its filename
 
-    // Create a new event object
+    // Construct the event object to insert
     const newEvent = {
       eventName,
       date,
       location,
       category,
       description,
-      seats: parseInt(seats), // Ensure seats is stored as a number
+      seats: parseInt(seats), // Convert seats to a number
       fee,
       deadline,
       organizer,
-      image,
+      image, // Image filename
     };
 
-    // Insert the event into the database
+    // Insert the new event into the collection
     const result = await eventsCollection.insertOne(newEvent);
 
-    // Send success response
+    // Respond with success message and inserted ID
     res
       .status(201)
       .json({ message: "Event added successfully", id: result.insertedId });
@@ -49,29 +49,35 @@ const addEvent = async (req, res) => {
   }
 };
 
-// Controller to retrieve all events
+// Controller to retrieve all events from the database
 const getAllEvent = async (req, res) => {
   try {
     const db = getDB();
     const eventsCollection = db.collection("events");
 
-    const events = await eventsCollection.find().toArray(); // Get all events
-    res.send(events); // Send as response
+    // Fetch all event documents
+    const events = await eventsCollection.find().toArray();
+
+    // Send the list of events
+    res.send(events);
   } catch (error) {
     console.error("Fetch events error:", error);
     res.status(500).json({ message: "Failed to fetch events" });
   }
 };
 
-// Controller to retrieve a single event by its ID
+// Controller to fetch a single event by its MongoDB _id
 const getEventById = async (req, res) => {
   try {
     const db = getDB();
     const eventsCollection = db.collection("events");
 
-    const id = req.params.id; // Extract event ID from request params
+    const id = req.params.id; // Extract ID from URL params
 
-    const event = await eventsCollection.findOne({ _id: new ObjectId(id) }); // Find event by ID
+    // Find event document by ID
+    const event = await eventsCollection.findOne({ _id: new ObjectId(id) });
+
+    // Send the event if found
     res.send(event);
   } catch (error) {
     console.error("Fetch event by ID error:", error);
@@ -79,19 +85,22 @@ const getEventById = async (req, res) => {
   }
 };
 
-// Controller to update an existing event
+// Controller to update an existing event by its ID
 const editEvent = async (req, res) => {
   try {
     const db = getDB();
     const eventsCollection = db.collection("events");
 
-    const id = req.params.id; // Event ID to be updated
-    const data = req.body; // Updated data from request body
+    const id = req.params.id; // ID of the event to update
+    const data = req.body; // New data from request body
 
+    // Update event with new data
     const result = await eventsCollection.updateOne(
-      { _id: new ObjectId(id) }, // Match event by ID
-      { $set: data } // Set new values
+      { _id: new ObjectId(id) }, // Match by ID
+      { $set: data } // Set updated fields
     );
+
+    // Send update result
     res.send(result);
   } catch (error) {
     console.error("Edit Event Error:", error);
@@ -99,14 +108,18 @@ const editEvent = async (req, res) => {
   }
 };
 
-// Controller to delete an event
+// Controller to delete an event by its ID
 const deleteEvent = async (req, res) => {
   try {
     const db = getDB();
     const eventsCollection = db.collection("events");
 
-    const id = req.params.id; // Event ID to be deleted
-    const result = await eventsCollection.deleteOne({ _id: new ObjectId(id) }); // Delete by ID
+    const id = req.params.id; // ID of event to delete
+
+    // Attempt to delete the event
+    const result = await eventsCollection.deleteOne({ _id: new ObjectId(id) });
+
+    // Send result of delete operation
     res.send(result);
   } catch (error) {
     console.error("Delete Event Error:", error);
@@ -114,7 +127,7 @@ const deleteEvent = async (req, res) => {
   }
 };
 
-// Export all event-related controllers
+// Export all event controller functions to be used in routes
 module.exports = {
   addEvent,
   getAllEvent,

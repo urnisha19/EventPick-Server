@@ -1,12 +1,13 @@
 const { getDB } = require("../utils/connectDB");
 const { ObjectId } = require("mongodb");
 
-//addBooking
+// Add a new booking to the database
 const addBooking = async (req, res) => {
   try {
     const db = getDB();
-    const bookingsCollection = db.collection("bookings");
+    const bookingsCollection = db.collection("bookings"); // Reference the "bookings" collection
 
+    // Destructure booking info from request body
     const {
       eventId,
       eventName,
@@ -17,7 +18,7 @@ const addBooking = async (req, res) => {
       tickets,
       paymentMethod,
     } = req.body;
-
+    // Validate required fields
     if (
       !eventId ||
       !eventName ||
@@ -29,7 +30,7 @@ const addBooking = async (req, res) => {
     ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
+    // Insert booking into the database
     const result = await bookingsCollection.insertOne({
       eventId,
       eventName,
@@ -39,7 +40,7 @@ const addBooking = async (req, res) => {
       phone,
       tickets,
       paymentMethod,
-      createdAt: new Date(),
+      createdAt: new Date(), // Store timestamp
     });
 
     res
@@ -51,7 +52,7 @@ const addBooking = async (req, res) => {
   }
 };
 
-//get booking by email
+// Retrieve all bookings associated with a user's email
 const getBookingByEmail = async (req, res) => {
   const db = getDB();
   const bookingsCollection = db.collection("bookings");
@@ -65,7 +66,7 @@ const getBookingByEmail = async (req, res) => {
   }
 };
 
-//delete booking
+// Delete a booking by its ID
 const deleteBooking = async (req, res) => {
   const db = getDB();
   const bookingsCollection = db.collection("bookings");

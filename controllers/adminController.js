@@ -1,8 +1,6 @@
-// Load environment variables from .env file
 require("dotenv").config();
 const { MongoClient } = require("mongodb");
 
-// MongoDB connection URI and database name from environment variables
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 const dbName = process.env.DB_NAME;
@@ -12,7 +10,7 @@ const addAdmin = async (req, res) => {
   try {
     const { email } = req.body; // Extract email from request body
 
-    await client.connect(); // Connect to the MongoDB client
+    await client.connect();
     const db = client.db(dbName); // Get the database
     const adminsCollection = db.collection("admins"); // Reference the "admins" collection
 
@@ -27,7 +25,7 @@ const addAdmin = async (req, res) => {
 // Retrieve all admins from the database
 const getAllAdmin = async (req, res) => {
   try {
-    await client.connect(); // Connect to the database
+    await client.connect();
     const db = client.db(dbName);
     const adminsCollection = db.collection("admins");
 
@@ -42,7 +40,7 @@ const getAllAdmin = async (req, res) => {
 // Check if a given email belongs to an admin
 const isAdmin = async (req, res) => {
   try {
-    const email = req.query.email; // Extract email from query params
+    const email = req.query.email;
 
     await client.connect();
     const db = client.db(dbName);
@@ -60,7 +58,7 @@ const isAdmin = async (req, res) => {
 // Delete an admin by email
 const deleteAdmin = async (req, res) => {
   try {
-    const { email } = req.params; // Get the email from route parameters
+    const { email } = req.params;
 
     await client.connect();
     const db = client.db(dbName);
@@ -76,7 +74,7 @@ const deleteAdmin = async (req, res) => {
     console.error("Error deleting admin:", error);
     res.status(500).json({ message: "Internal Server Error" });
   } finally {
-    await client.close(); // Ensure the database connection is closed
+    await client.close();
   }
 };
 
