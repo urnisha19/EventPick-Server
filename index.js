@@ -11,8 +11,11 @@ connectDB();
 
 // Middlewares
 app.use(
-  cors({ origin: "http://localhost:5173/", credentials: true })
-); //Allow requests from frontend running on localhost:5173 with credentials
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5173/"], // allow both with and without slash
+    credentials: true,
+  })
+);
 app.use(express.json()); // Middleware to parse incoming JSON payloads
 
 // Import and use user-related routes
