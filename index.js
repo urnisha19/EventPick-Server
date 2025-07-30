@@ -12,7 +12,7 @@ connectDB();
 // Middlewares
 app.use(
   cors({
-    origin: ["https://event-pick.vercel.app/", "http://localhost:5173", "http://localhost:5173/"], // allow both with and without slash
+    origin: ["https://event-pick.vercel.app", "http://localhost:5173", "http://localhost:5173/"], // allow both with and without slash
     credentials: true,
   })
 );
