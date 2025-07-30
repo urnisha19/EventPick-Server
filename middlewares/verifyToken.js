@@ -1,5 +1,11 @@
 // Import the Firebase Admin SDK
 const admin = require("firebase-admin");
+const serviceAccount = require("../firebase-service-account.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
 
 // Middleware function to verify Firebase ID token from the Authorization header
 const verifyToken = async (req, res, next) => {
