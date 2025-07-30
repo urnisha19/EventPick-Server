@@ -6,7 +6,7 @@ const { connectDB } = require("./utils/connectDB");
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Connect to MongoDB
+// Connect to MongoDB 
 connectDB();
 
 // Middlewares
